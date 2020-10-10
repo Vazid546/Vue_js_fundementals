@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Shopping List App</title>
+        <!-- <link rel="stylesheet" href="main.css"/> -->
+    </head>
+    <body>
+        <div id="shopping-list">
+            <h1>{{header.toLocaleUpperCase()}}</h1>
+            <button v-if="state === 'default'" class="btn btn-primary" @click="changeState('edit')" >Add</button>
+            <button v-else class="btn btn-cancel" @click="changeState('default')">Cancel</button>
+            <div v-if="state === 'edit'">
+                <input type="text" v-model="newItem" placeholder="Add An Item" @keyup.up="saveItem"/>
+                <button class="btn btn-primary" :disabled="newItem.length === 0" value="Add Item" @click="saveItem"/>
+            </div>
+            <ul>
+                <li v-for="item in items" class="priority" :class="{strikeout: item.purchased}">{{item.name}}</li>
+            </ul>
+            <ul>
+                <li v-for="item in reverseItems" class="priority" :class="{strikeout: item.purchased}">{{item.name}}</li>
+            </ul>
+        </div>
+        <script src="https://unpkg.com/vue"></script>
+        <script>
+            var shoppingList = new Vue({
+                el: '#shopping-list',
+                data: {
+                    state: 'default',
+                    header : "Hello!",
+                    items : [
+                        {
+                            name : "Apple",
+                            purchased: false
+                        },
+                        {
+                            name : "Banana",
+                            purchased: false
+                        }
+                    ],
+                    newItem: ""
+                },
+                computed: {
+                    reverseItems() {
+                        return this.items.slice(0).reverse()
+                    }
+                },
+                methods: {
+                    saveItem: function(){
+                        this.items.push({
+                            name: this.newItem,
+                            purchased: false
+                            });
+                        this.newItem = '';
+                    },
+
+                    changeState: function(newState) {
+                        this.state = newState;
+                        this.newItem = ''
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
